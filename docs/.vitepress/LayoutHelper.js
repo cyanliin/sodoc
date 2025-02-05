@@ -9,24 +9,29 @@ export function formatSideBarItem(sideBarItem) {
   if (LabelList[label]) {
     labelHtml = label ? `<span class="sodoc-sidebar-label" style="background-color: ${ LabelList[label].color }">${ LabelList[label].text }</span>` : '';
   }
-  
-  sideBarItem.text = `
-    <div class="sodoc-sidebar-item">
-      ${ indexHtml } ${ labelHtml } ${ sideBarItem.text }
-    </div>`;
-  
 
+  const item = structuredClone(sideBarItem);
+  item.items = [];
+
+  item.text = `
+    <span class="sodoc-sidebar-item">
+      ${ indexHtml } ${ labelHtml } ${ sideBarItem.text }
+    </span>`;
+  
   if (sideBarItem.items && sideBarItem.items.length) {
     for (let i = 0; i < sideBarItem.items.length; i += 1) {
-      formatSideBarItem( sideBarItem.items[i])
+      item.items.push(formatSideBarItem(sideBarItem.items[i]))
     }
   }
+  
+  return item;
 }
 
 export function sidebarFormater(sidebar) {
+  const items = [];
   for (let r = 0; r < sidebar.length; r += 1) {
-    formatSideBarItem(sidebar[r]);
+    items.push(formatSideBarItem(sidebar[r]));
   }
-  return sidebar;
+  return items;
 }
 
